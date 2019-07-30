@@ -1,12 +1,9 @@
 package xandeer.android.lab.pdftopng
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
@@ -14,11 +11,11 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_pdf_to_png.*
 import xandeer.android.lab.App
 import xandeer.android.lab.R
+import xandeer.android.lab.utils.PermissionUtil
 
 
 class PdfToPngActivity : AppCompatActivity() {
   companion object {
-    private const val PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0
     private const val PICK_PDF_FILE_CODE = 0
   }
 
@@ -41,20 +38,16 @@ class PdfToPngActivity : AppCompatActivity() {
   }
 
   private fun setObserve() {
-    model.getScale().observe(this, Observer<Int> {
-      updateImagePreview()
+    model.getScale().observe(this, Observer {
+      updatePreview()
     })
 
     model.getPdfUri().observe(this, Observer {
-      if (needRequestPermission()) {
-        requestPermission()
-      } else {
-        updateImagePreview()
-      }
+      updatePreview()
     })
   }
 
-  private fun updateImagePreview() {
+  private fun updatePreview() {
     val uri = model.getPdfUri().value ?: return
 
     val scale = model.getScale().value!!
@@ -99,17 +92,17 @@ class PdfToPngActivity : AppCompatActivity() {
 
   private fun initPathButton() {
     choosePdfButton.setOnClickListener {
-      if (needRequestPermission()) {
-        requestPermission()
-      } else {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-          addCategory(Intent.CATEGORY_OPENABLE)
-          type = "application/pdf"
-        }
-
-        startActivityForResult(intent, PICK_PDF_FILE_CODE)
-      }
+      pickPdfFile()
     }
+  }
+
+  private fun pickPdfFile() {
+    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+      addCategory(Intent.CATEGORY_OPENABLE)
+      type = "application/pdf"
+    }
+
+    startActivityForResult(intent, PICK_PDF_FILE_CODE)
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -123,21 +116,7 @@ class PdfToPngActivity : AppCompatActivity() {
     }
   }
 
-  private fun needRequestPermission(): Boolean {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-        && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-  }
-
-  private fun requestPermission() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-          PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE)
-    }
-  }
-
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-    if (needRequestPermission()) {
-      requestPermission()
-    }
+    PermissionUtil.requestWriteExternalStorageIfNeed(this)
   }
 }
