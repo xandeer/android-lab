@@ -2,7 +2,6 @@ package xandeer.android.lab.pdftopng
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -13,13 +12,13 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_pdf_to_png.*
+import xandeer.android.lab.App
 import xandeer.android.lab.R
 
 
 class PdfToPngActivity : AppCompatActivity() {
   companion object {
     private const val PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0
-    private const val SHARED_PREFERENCES_NAME = "pdf_to_png"
     private const val PICK_PDF_FILE_CODE = 0
   }
 
@@ -36,13 +35,13 @@ class PdfToPngActivity : AppCompatActivity() {
   }
 
   private fun initModel() {
-    model = ViewModelProviders.of(this)[ViewModel::class.java]
-    model.setSharedPreferences(getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE))
+    model = ViewModelProviders.of(this)[ViewModel::class.java].apply {
+      setApp(application as App)
+    }
   }
 
   private fun setObserve() {
     model.getScale().observe(this, Observer<Int> {
-      scaledPngValueView.text = getString(R.string.pdf_to_png_scaled_value, it)
       updateImagePreview()
     })
 
@@ -56,7 +55,8 @@ class PdfToPngActivity : AppCompatActivity() {
   }
 
   private fun updateImagePreview() {
-    val uri = model.getPdfUri().value!!
+    val uri = model.getPdfUri().value ?: return
+
     val scale = model.getScale().value!!
 
     val takeFlags = intent.flags and
@@ -70,6 +70,8 @@ class PdfToPngActivity : AppCompatActivity() {
       val page = pdfRenderer.openPage(0)
       val width = page.width * scale
       val height = page.height * scale
+
+      scaledPngValueView.text = getString(R.string.pdf_to_png_scaled_value, scale, width, height)
 
       val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
       page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)

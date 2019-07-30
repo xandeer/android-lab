@@ -1,18 +1,18 @@
 package xandeer.android.lab.pdftopng
 
-import android.content.SharedPreferences
 import android.net.Uri
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import xandeer.android.lab.App
 
 class ViewModel : ViewModel() {
   companion object {
-    private const val PDF_URI_KEY = "PDF_URI"
+    private const val PDF_URI_KEY = "PDF_TO_PNG:PDF_URI"
   }
 
-  private lateinit var sharedPreferences: SharedPreferences
+  private lateinit var app: App
 
   private val scale: MutableLiveData<Int> = MutableLiveData<Int>().apply {
     value = 1
@@ -20,13 +20,13 @@ class ViewModel : ViewModel() {
 
   private val pdfUri: MutableLiveData<Uri> by lazy {
     MutableLiveData<Uri>().apply {
-      val str = sharedPreferences.getString(PDF_URI_KEY, "") ?: ""
-      value = Uri.parse(str)
+      val str = app.defaultSharedPreferences.getString(PDF_URI_KEY, "") ?: ""
+      value = if (str.isEmpty()) null else Uri.parse(str)
     }
   }
 
-  fun setSharedPreferences(sharedPreferences: SharedPreferences) {
-    this.sharedPreferences = sharedPreferences
+  fun setApp(app: App) {
+    this.app = app
   }
 
   fun getScale(): LiveData<Int> = scale
@@ -49,7 +49,7 @@ class ViewModel : ViewModel() {
 
   fun setPdfPath(uri: Uri) {
     pdfUri.value = uri
-    sharedPreferences.edit(true) {
+    app.defaultSharedPreferences.edit(true) {
       putString(PDF_URI_KEY, uri.toString())
     }
   }

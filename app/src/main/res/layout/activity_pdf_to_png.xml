@@ -27,15 +27,15 @@
 
       <TextView
         android:id="@+id/pdfPathView"
-        android:textAlignment="textStart"
         android:layout_width="wrap_content"
-        android:layout_height="20dp" />
+        android:layout_height="20dp"
+        android:textAlignment="textStart" />
 
       <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/choosePdfButton"
-        android:text="@string/pdf_to_png_choose_pdf_file"
         android:layout_width="match_parent"
-        android:layout_height="48dp" />
+        android:layout_height="48dp"
+        android:text="@string/pdf_to_png_choose_pdf_file" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,29 +43,32 @@
       android:layout_height="match_parent"
       android:layout_weight="1"
       android:orientation="vertical">
+
       <TextView
         android:id="@+id/scaledPngValueView"
-        android:textAlignment="center"
-        android:textSize="16sp"
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
+        android:layout_height="20dp"
+        android:textAlignment="center"
+        android:textSize="16sp" />
 
       <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
         <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/increaseScaleButton"
-          android:text="+"
-          android:layout_weight="1"
           android:layout_width="0dp"
-          android:layout_height="match_parent" />
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="+" />
+
         <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/decreaseScaleButton"
-          android:text="-"
-          android:layout_weight="1"
           android:layout_width="0dp"
-          android:layout_height="match_parent" />
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="-" />
       </LinearLayout>
     </LinearLayout>
   </LinearLayout>
