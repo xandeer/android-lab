@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
@@ -25,33 +26,53 @@ class PdfToPngActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_pdf_to_png)
 
-    initModel()
-
-    setObserve()
-    setCallback()
-  }
-
-  private fun initModel() {
     model = ViewModelProviders.of(this)[ViewModel::class.java].apply {
       setApp(application as App)
     }
+
+    subscribeToModel(model)
+    setClickCallbacks(model)
   }
 
-  private fun setObserve() {
+  private fun subscribeToModel(model: ViewModel) {
     model.getScale().observe(this, Observer {
-      updatePreview()
+      val uri = model.pdfUri
+      if (uri != null && it != 0) {
+        updatePreview(uri, it)
+      }
+      decreaseScaleButton.isEnabled = it != 1
     })
-
     model.getPdfUri().observe(this, Observer {
-      updatePreview()
+      model.scale = 0
+      if (it == null) {
+        setScaleButtons(false)
+      } else {
+        setScaleButtons(true)
+      }
+      model.scale = 1
     })
   }
 
-  private fun updatePreview() {
-    val uri = model.getPdfUri().value ?: return
+  private fun setScaleButtons(enabled: Boolean) {
+    val buttons = arrayOf(increaseScaleButton, decreaseScaleButton)
+    buttons.forEach { it.isEnabled = enabled }
+  }
 
-    val scale = model.getScale().value!!
+  private fun setClickCallbacks(model: ViewModel) {
+    choosePdfButton.setOnClickListener {
+      pickPdfFile()
+    }
 
+    increaseScaleButton.setOnClickListener {
+      model.increaseScale()
+    }
+
+    decreaseScaleButton.setOnClickListener {
+      model.decreaseScale()
+    }
+  }
+
+  private fun updatePreview(uri: Uri, scale: Int) {
     val takeFlags = intent.flags and
         (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
     contentResolver.takePersistableUriPermission(uri, takeFlags)
@@ -76,26 +97,6 @@ class PdfToPngActivity : AppCompatActivity() {
     }
   }
 
-  private fun setCallback() {
-    initScaleButtons()
-    initPathButton()
-  }
-
-  private fun initScaleButtons() {
-    increaseScaleButton.setOnClickListener {
-      model.increaseScale()
-    }
-    decreaseScaleButton.setOnClickListener {
-      model.decreaseScale()
-    }
-  }
-
-  private fun initPathButton() {
-    choosePdfButton.setOnClickListener {
-      pickPdfFile()
-    }
-  }
-
   private fun pickPdfFile() {
     val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
       addCategory(Intent.CATEGORY_OPENABLE)
@@ -111,8 +112,10 @@ class PdfToPngActivity : AppCompatActivity() {
     if (resultCode != Activity.RESULT_OK) return
 
     val uri = data?.data
-    if (requestCode == PICK_PDF_FILE_CODE && uri != null) {
-      model.setPdfPath(uri)
+    if (requestCode == PICK_PDF_FILE_CODE
+        && uri != null
+        && ::model.isInitialized) {
+      model.pdfUri = uri
     }
   }
 

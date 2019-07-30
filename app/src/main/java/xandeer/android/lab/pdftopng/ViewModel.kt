@@ -2,8 +2,7 @@ package xandeer.android.lab.pdftopng
 
 import android.net.Uri
 import androidx.core.content.edit
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import androidx.lifecycle.ViewModel
 import xandeer.android.lab.App
 
@@ -12,45 +11,49 @@ class ViewModel : ViewModel() {
     private const val PDF_URI_KEY = "PDF_TO_PNG:PDF_URI"
   }
 
-  private lateinit var app: App
+  var scale
+    get() = _scale.value!!
+    set(v) {
+      _scale.value = v
+    }
 
-  private val scale: MutableLiveData<Int> = MutableLiveData<Int>().apply {
+  var pdfUri
+    get() = _pdfUri.value
+    set(uri) {
+      _pdfUri.value = uri
+      _app.defaultSharedPreferences.edit(true) {
+        putString(PDF_URI_KEY, uri.toString())
+      }
+    }
+
+  private lateinit var _app: App
+
+  private val _scale: MutableLiveData<Int> = MutableLiveData<Int>().apply {
     value = 1
   }
 
-  private val pdfUri: MutableLiveData<Uri> by lazy {
-    MutableLiveData<Uri>().apply {
-      val str = app.defaultSharedPreferences.getString(PDF_URI_KEY, "") ?: ""
+  private val _pdfUri: MutableLiveData<Uri?> by lazy {
+    MutableLiveData<Uri?>().apply {
+      val str = _app.defaultSharedPreferences.getString(PDF_URI_KEY, "") ?: ""
       value = if (str.isEmpty()) null else Uri.parse(str)
     }
   }
 
   fun setApp(app: App) {
-    this.app = app
+    _app = app
   }
 
-  fun getScale(): LiveData<Int> = scale
+  fun getScale(): LiveData<Int> = _scale
 
   fun increaseScale() {
-    val v = scale.value
-    if (v != null) {
-      scale.value = v.plus(1)
-    }
+    scale++
   }
 
   fun decreaseScale() {
-    val v = scale.value
-    if (v != null && v > 1) {
-      scale.value = v.minus(1)
+    if (scale > 1) {
+      scale--
     }
   }
 
-  fun getPdfUri(): LiveData<Uri> = pdfUri
-
-  fun setPdfPath(uri: Uri) {
-    pdfUri.value = uri
-    app.defaultSharedPreferences.edit(true) {
-      putString(PDF_URI_KEY, uri.toString())
-    }
-  }
+  fun getPdfUri(): LiveData<Uri?> = _pdfUri
 }
