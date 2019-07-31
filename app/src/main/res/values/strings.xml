@@ -2,5 +2,5 @@
   <string name="app_name">lab</string>
     <string name="pdf_to_png_converted_png">Converted png</string>
   <string name="pdf_to_png_choose_pdf_file">Choose Pdf File</string>
-  <string name="pdf_to_png_scaled_value">%1$dx, (%2$dx%3$d)</string>
+  <string name="pdf_to_png_scaled_value">%1$dx</string>
 </resources>

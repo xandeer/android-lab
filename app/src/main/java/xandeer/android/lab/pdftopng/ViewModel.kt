@@ -29,7 +29,7 @@ class ViewModel : ViewModel() {
   private lateinit var _app: App
 
   private val _scale: MutableLiveData<Int> = MutableLiveData<Int>().apply {
-    value = 1
+    value = 0
   }
 
   private val _pdfUri: MutableLiveData<Uri?> by lazy {
