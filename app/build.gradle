@@ -24,6 +24,8 @@ android {
 dependencies {
   implementation deps.kotlin.stdlib
 
+  implementation deps.timber
+
   // Support libraries
   implementation deps.support.core_ktx
   implementation deps.support.app_compat

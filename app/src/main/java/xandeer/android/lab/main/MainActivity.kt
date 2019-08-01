@@ -2,14 +2,14 @@ package xandeer.android.lab.main
 
 import android.content.ComponentName
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import xandeer.android.lab.AbstractActivity
 import xandeer.android.lab.R
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AbstractActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
