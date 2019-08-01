@@ -5,12 +5,14 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_pdf_to_png.*
+import timber.log.Timber
+import xandeer.android.lab.AbstractActivity
 import xandeer.android.lab.App
 import xandeer.android.lab.R
 import xandeer.android.lab.utils.PermissionUtil
@@ -21,7 +23,7 @@ import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 
-class PdfToPngActivity : AppCompatActivity() {
+class PdfToPngActivity : AbstractActivity() {
   companion object {
     private const val PICK_PDF_FILE_CODE = 0
     // https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/view/DisplayListCanvas.java#43
@@ -31,6 +33,7 @@ class PdfToPngActivity : AppCompatActivity() {
   }
 
   private lateinit var model: ViewModel
+  private val handler = Handler()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -48,7 +51,10 @@ class PdfToPngActivity : AppCompatActivity() {
     model.getScale().observe(this, Observer {
       val uri = model.pdfUri
       if (uri != null && it != 0) {
-        updatePreview(uri, it)
+        // make sure activity opened before update preview
+        handler.postDelayed({
+          updatePreview(uri, it)
+        }, 30)
       }
       decreaseScaleButton.isEnabled = it != 1
     })
@@ -131,14 +137,14 @@ class PdfToPngActivity : AppCompatActivity() {
       ret -= 0.01f
     }
 
-    println("zoom: $ret")
+    Timber.i("zoom: $ret")
     return ret
   }
 
   private fun printBitmapSize(bitmap: Bitmap) {
     val kb = bitmap.byteCount / 1024
     val mb = kb / 1024
-    println("bitmap size: ${if (mb > 0) "$mb Mb" else "$kb Kb"}")
+    Timber.i("bitmap size: ${if (mb > 0) "$mb Mb" else "$kb Kb"}")
   }
 
   private fun saveToGallery(bitmap: Bitmap) {
