@@ -7,7 +7,6 @@ import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_pdf_to_png.*
@@ -33,7 +32,7 @@ class PdfToPngActivity : AbstractActivity() {
   }
 
   private lateinit var model: ViewModel
-  private val handler = Handler()
+  private var isTransitionEnded = false
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -49,13 +48,7 @@ class PdfToPngActivity : AbstractActivity() {
 
   private fun subscribeToModel(model: ViewModel) {
     model.getScale().observe(this, Observer {
-      val uri = model.pdfUri
-      if (uri != null && it != 0) {
-        // make sure activity opened before update preview
-        handler.postDelayed({
-          updatePreview(uri, it)
-        }, 30)
-      }
+      updatePreview()
       decreaseScaleButton.isEnabled = it != 1
     })
     model.getPdfUri().observe(this, Observer {
@@ -85,6 +78,17 @@ class PdfToPngActivity : AbstractActivity() {
 
     decreaseScaleButton.setOnClickListener {
       model.decreaseScale()
+    }
+  }
+
+  private fun updatePreview() {
+    val uri = model.pdfUri
+    val scale = model.scale
+
+    if (isTransitionEnded
+      && uri != null
+      && scale != 0) {
+      updatePreview(uri, scale)
     }
   }
 
@@ -178,6 +182,13 @@ class PdfToPngActivity : AbstractActivity() {
     }
 
     startActivityForResult(intent, PICK_PDF_FILE_CODE)
+  }
+
+  override fun onEnterAnimationComplete() {
+    super.onEnterAnimationComplete()
+    isTransitionEnded = true
+
+    updatePreview()
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
