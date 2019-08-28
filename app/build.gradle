@@ -9,8 +9,8 @@ android {
     applicationId "xandeer.android.lab"
     minSdkVersion build_versions.min_sdk
     targetSdkVersion build_versions.target_sdk
-    versionCode 1
-    versionName "1.0"
+    versionCode app_versions.code
+    versionName app_versions.name
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
   buildTypes {

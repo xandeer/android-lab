@@ -1,10 +1,5 @@
-/**
- * Shared file between builds so that they can all use the same dependencies and
- * maven repositories.
- **/
-ext.deps = [:]
 def versions = [:]
-versions.android_gradle_plugin = '3.4.2'
+versions.android_gradle_plugin = '3.5.0'
 versions.apache_commons = "2.5"
 versions.arch_core = "2.0.1"
 versions.atsl_core = "1.1.0"
@@ -43,6 +38,19 @@ ext.versions = versions
 def deps = [:]
 deps.benchmark = "androidx.benchmark:benchmark:$versions.benchmark"
 deps.benchmark_gradle = "androidx.benchmark:benchmark-gradle-plugin:$versions.benchmark"
+deps.okhttp_logging_interceptor = "com.squareup.okhttp3:logging-interceptor:${versions.okhttp_logging_interceptor}"
+deps.paging_ktx = "androidx.paging:paging-runtime-ktx:$versions.paging"
+deps.dexmaker = "com.linkedin.dexmaker:dexmaker-mockito:$versions.dexmaker"
+deps.constraint_layout = "androidx.constraintlayout:constraintlayout:$versions.constraint_layout"
+deps.timber = "com.jakewharton.timber:timber:$versions.timber"
+deps.junit = "junit:junit:$versions.junit"
+deps.mock_web_server = "com.squareup.okhttp3:mockwebserver:$versions.mockwebserver"
+deps.rxjava2 = "io.reactivex.rxjava2:rxjava:$versions.rxjava2"
+deps.rx_android = "io.reactivex.rxjava2:rxandroid:$versions.rx_android"
+deps.hamcrest = "org.hamcrest:hamcrest-all:$versions.hamcrest"
+deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+deps.robolectric = "org.robolectric:robolectric:$versions.robolectric"
+
 
 def support = [:]
 support.annotations = "androidx.annotation:annotation:$versions.support"
@@ -83,7 +91,6 @@ retrofit.runtime = "com.squareup.retrofit2:retrofit:$versions.retrofit"
 retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
 retrofit.mock = "com.squareup.retrofit2:retrofit-mock:$versions.retrofit"
 deps.retrofit = retrofit
-deps.okhttp_logging_interceptor = "com.squareup.okhttp3:logging-interceptor:${versions.okhttp_logging_interceptor}"
 
 def dagger = [:]
 dagger.runtime = "com.google.dagger:dagger:$versions.dagger"
@@ -91,7 +98,6 @@ dagger.android = "com.google.dagger:dagger-android:$versions.dagger"
 dagger.android_support = "com.google.dagger:dagger-android-support:$versions.dagger"
 dagger.compiler = "com.google.dagger:dagger-compiler:$versions.dagger"
 dagger.android_support_compiler = "com.google.dagger:dagger-android-processor:$versions.dagger"
-
 deps.dagger = dagger
 
 def espresso = [:]
@@ -118,27 +124,12 @@ kotlin.stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
 kotlin.test = "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin"
 kotlin.plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
 kotlin.allopen = "org.jetbrains.kotlin:kotlin-allopen:$versions.kotlin"
-
 deps.kotlin = kotlin
-
-deps.paging_ktx = "androidx.paging:paging-runtime-ktx:$versions.paging"
 
 def glide = [:]
 glide.runtime = "com.github.bumptech.glide:glide:$versions.glide"
 glide.compiler = "com.github.bumptech.glide:compiler:$versions.glide"
 deps.glide = glide
-deps.dexmaker = "com.linkedin.dexmaker:dexmaker-mockito:$versions.dexmaker"
-deps.constraint_layout = "androidx.constraintlayout:constraintlayout:$versions.constraint_layout"
-deps.timber = "com.jakewharton.timber:timber:$versions.timber"
-deps.junit = "junit:junit:$versions.junit"
-deps.mock_web_server = "com.squareup.okhttp3:mockwebserver:$versions.mockwebserver"
-deps.rxjava2 = "io.reactivex.rxjava2:rxjava:$versions.rxjava2"
-deps.rx_android = "io.reactivex.rxjava2:rxandroid:$versions.rx_android"
-deps.hamcrest = "org.hamcrest:hamcrest-all:$versions.hamcrest"
-deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
-deps.robolectric = "org.robolectric:robolectric:$versions.robolectric"
-ext.deps = deps
-
 
 def work = [:]
 work.runtime = "androidx.work:work-runtime:$versions.work"
@@ -163,9 +154,16 @@ def build_versions = [:]
 build_versions.min_sdk = 21
 build_versions.target_sdk = 29
 build_versions.build_tools = "29"
+
 ext.build_versions = build_versions
 
-ext.deps = deps
+def app_versions = [:]
+app_versions.code = 1
+app_versions.major = 0
+app_versions.minor = 1
+app_versions.maintenance = 1
+app_versions.name = "${app_versions.major}.${app_versions.minor}.${app_versions.maintenance}"
+ext.app_versions = app_versions
 
 static def addRepos(RepositoryHandler handler) {
     handler.google()
