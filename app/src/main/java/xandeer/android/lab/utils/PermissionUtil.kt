@@ -4,20 +4,29 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
-import androidx.annotation.RequiresApi
-
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 object PermissionUtil {
-  private val WRITE_EXTERNAL_STORAGE = Permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 0)
+  private val EXTERNAL_STORAGE_PERMISSIONS =
+    Permission(
+      arrayListOf(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE
+      ),
+      0
+    )
 
-  data class Permission(val permission: String, val code: Int)
+  data class Permission(val permissions: List<String>, val code: Int)
 
-  fun requestWriteExternalStorageIfNeed(activity: Activity): Boolean = requestPermissionIfNeed(activity, WRITE_EXTERNAL_STORAGE)
+  fun requestExternalStorageIfNeed(activity: Activity): Boolean =
+    requestPermissionIfNeed(activity, EXTERNAL_STORAGE_PERMISSIONS)
 
-  private fun requestPermissionIfNeed(activity: Activity, permission: Permission): Boolean {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-        && !isGranted(activity, permission)) {
+  private fun requestPermissionIfNeed(
+    activity: Activity, permission: Permission
+  ): Boolean {
+    return if (!isGranted(activity, permission)
+    ) {
       request(activity, permission)
       true
     } else {
@@ -25,13 +34,22 @@ object PermissionUtil {
     }
   }
 
-  @RequiresApi(Build.VERSION_CODES.M)
   private fun isGranted(context: Context, permission: Permission): Boolean {
-    return context.checkSelfPermission(permission.permission) == PackageManager.PERMISSION_GRANTED
+    var hasPermissions = true
+    permission.permissions.forEach {
+      if (ContextCompat.checkSelfPermission(context, it)
+        != PackageManager.PERMISSION_GRANTED
+      ) {
+        hasPermissions = false
+        return@forEach
+      }
+    }
+    return hasPermissions
   }
 
-  @RequiresApi(Build.VERSION_CODES.M)
   private fun request(activity: Activity, permission: Permission) {
-    activity.requestPermissions(arrayOf(permission.permission), permission.code)
+    ActivityCompat.requestPermissions(
+      activity, permission.permissions.toTypedArray(), permission.code
+    )
   }
 }

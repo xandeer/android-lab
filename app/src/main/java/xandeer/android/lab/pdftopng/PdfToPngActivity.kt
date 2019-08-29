@@ -157,7 +157,7 @@ class PdfToPngActivity : AbstractActivity() {
   }
 
   private fun saveToGallery(bitmap: Bitmap) {
-    if (!PermissionUtil.requestWriteExternalStorageIfNeed(this)) {
+    if (!PermissionUtil.requestExternalStorageIfNeed(this)) {
       val dir = File(Environment.getExternalStorageDirectory(), GALLERY_PATH)
       val timestamp = SimpleDateFormat("yyMMdd_HHmmss", Locale.ENGLISH).format(Date())
       val f = File(dir, "$timestamp.png")
@@ -215,6 +215,6 @@ class PdfToPngActivity : AbstractActivity() {
     permissions: Array<out String>,
     grantResults: IntArray
   ) {
-    PermissionUtil.requestWriteExternalStorageIfNeed(this)
+    PermissionUtil.requestExternalStorageIfNeed(this)
   }
 }
