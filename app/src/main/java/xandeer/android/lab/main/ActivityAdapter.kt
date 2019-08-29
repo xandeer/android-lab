@@ -18,11 +18,11 @@ class ActivityAdapter : RecyclerView.Adapter<ActivityAdapter.ViewHolder>() {
   }
 
   override fun getItemCount(): Int {
-    return Activities.array.size
+    return Activities.size
   }
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-    holder.bind(Activities.array[position])
+    holder.bind(Activities.get(position)!!)
   }
 
   interface ItemClickListener {
