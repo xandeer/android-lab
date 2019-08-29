@@ -21,7 +21,6 @@ import java.util.*
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
-
 class PdfToPngActivity : AbstractActivity() {
   companion object {
     private const val PICK_PDF_FILE_CODE = 0
@@ -87,23 +86,29 @@ class PdfToPngActivity : AbstractActivity() {
 
     if (isTransitionEnded
       && uri != null
-      && scale != 0) {
+      && scale != 0
+    ) {
       updatePreview(uri, scale)
     }
   }
 
   private fun updatePreview(uri: Uri, scale: Int) {
-    val takeFlags = intent.flags and
-        (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-    contentResolver.takePersistableUriPermission(uri, takeFlags)
+    val descriptor = try {
+      val takeFlags = intent.flags and
+          (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+      contentResolver.takePersistableUriPermission(uri, takeFlags)
+      contentResolver.openFileDescriptor(uri, "r")
+    } catch (e: SecurityException) {
+      Timber.e(e)
+      null
+    }
 
-    pdfPathView.text = uri.lastPathSegment?.substringAfterLast("/")
-    val descriptor = contentResolver.openFileDescriptor(uri, "r")
     if (descriptor != null) {
       val pdfRenderer = PdfRenderer(descriptor)
       val page = pdfRenderer.openPage(0)
 
       val bitmap = createBitmap(page.width, page.height, scale)
+      pdfPathView.text = uri.lastPathSegment?.substringAfterLast("/")
       page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
 
       previewView.setImageBitmap(bitmap)
@@ -198,13 +203,18 @@ class PdfToPngActivity : AbstractActivity() {
 
     val uri = data?.data
     if (requestCode == PICK_PDF_FILE_CODE
-        && uri != null
-        && ::model.isInitialized) {
+      && uri != null
+      && ::model.isInitialized
+    ) {
       model.pdfUri = uri
     }
   }
 
-  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+  override fun onRequestPermissionsResult(
+    requestCode: Int,
+    permissions: Array<out String>,
+    grantResults: IntArray
+  ) {
     PermissionUtil.requestWriteExternalStorageIfNeed(this)
   }
 }
