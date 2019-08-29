@@ -26,7 +26,7 @@ class ActivityAdapter : RecyclerView.Adapter<ActivityAdapter.ViewHolder>() {
   }
 
   interface ItemClickListener {
-    fun onItemClick(className: String)
+    fun onItemClick(model: Model)
   }
 
   inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -34,7 +34,7 @@ class ActivityAdapter : RecyclerView.Adapter<ActivityAdapter.ViewHolder>() {
       val nameView = view.findViewById<TextView>(R.id.activityNameView)
       nameView.text = model.name
       view.setOnClickListener {
-        clickListener?.onItemClick(model.clazz)
+        clickListener?.onItemClick(model)
       }
     }
   }

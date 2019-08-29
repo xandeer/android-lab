@@ -20,7 +20,7 @@ class MainActivity : AbstractActivity() {
     if (isTaskRoot) {
       Activities.developing?.let {
         Timber.d("Auto start the developing activity of ${it.name}")
-        startActivity(it.clazz)
+        startActivity(it)
       }
     }
   }
@@ -32,17 +32,18 @@ class MainActivity : AbstractActivity() {
 
       adapter = ActivityAdapter().apply {
         clickListener = object : ActivityAdapter.ItemClickListener {
-          override fun onItemClick(className: String) {
-            startActivity(className)
+          override fun onItemClick(model: Model) {
+            startActivity(model)
           }
         }
       }
     }
   }
 
-  private fun startActivity(className: String) {
+  private fun startActivity(model: Model) {
     val intent = Intent()
-    intent.component = ComponentName(packageName, className)
+    intent.component = ComponentName(packageName, model.clazz)
+    intent.putExtra(EXTRA_TITLE, model.name)
     startActivity(intent)
   }
 }
