@@ -1,6 +1,15 @@
 <resources>
   <string name="app_name">lab</string>
-    <string name="pdf_to_png_converted_png">Converted png</string>
+  <string name="pdf_to_png_converted_png">Converted png</string>
   <string name="pdf_to_png_choose_pdf_file">Choose Pdf File</string>
   <string name="pdf_to_png_scaled_value">%1$dx</string>
+  <string name="a_picture_to_blur">A picture to blur</string>
+  <string name="pick_picture">Pick Picture</string>
+  <string name="blur_lv1">A little blurred</string>
+  <string name="blur_lv2">More blurred</string>
+  <string name="blur_lv3">The most blurred</string>
+  <string name="blur_title">Select Blur Amount</string>
+  <string name="go">Go</string>
+  <string name="view_blurred">View blurred</string>
+  <string name="cancel">Cancel</string>
 </resources>

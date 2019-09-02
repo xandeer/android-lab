@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:padding="16dp"
+  tools:context=".work.WorkActivity">
+
+  <ImageView
+    android:id="@+id/imageView"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:contentDescription="@string/a_picture_to_blur" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="3"
+      android:orientation="vertical">
+
+      <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/blur_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+      <RadioGroup
+        android:id="@+id/lvs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+          android:id="@+id/lv1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:checked="true"
+          android:text="@string/blur_lv1" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+          android:id="@+id/lv2"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/blur_lv2" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+          android:id="@+id/lv3"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/blur_lv3" />
+      </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="2"
+      android:orientation="vertical">
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/pickPictureBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pick_picture" />
+
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+          android:id="@+id/cancelBtn"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/cancel"
+          android:visibility="gone" />
+
+        <ProgressBar
+          android:id="@+id/progressBar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:visibility="gone" />
+      </LinearLayout>
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/goBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/go"
+        android:visibility="gone" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/viewBlurredBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/view_blurred"
+        android:visibility="gone" />
+    </LinearLayout>
+  </LinearLayout>
+</LinearLayout>

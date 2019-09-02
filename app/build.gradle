@@ -24,7 +24,11 @@ android {
 dependencies {
   implementation deps.kotlin.stdlib
 
+  implementation deps.work.runtime_ktx
+
   implementation deps.timber
+  implementation deps.glide.runtime
+  annotationProcessor deps.glide.compiler
 
   // Support libraries
   implementation deps.support.core_ktx
@@ -32,6 +36,7 @@ dependencies {
   implementation deps.support.v4
   implementation deps.support.design
   implementation deps.support.cardview
+  implementation deps.support.app_compat
   implementation deps.constraint_layout
 
   // Architecture components
