@@ -33,6 +33,8 @@ class BlurWorker(appContext: Context, workerParameters: WorkerParameters) :
         )
       )
 
+      Timber.d("Blurring uri: $resourceUri")
+
       val outputBitmap = Utils.blurBitmap(bitmap, applicationContext)
       val uri = Utils.writeBitmapToFile(applicationContext, outputBitmap)
 

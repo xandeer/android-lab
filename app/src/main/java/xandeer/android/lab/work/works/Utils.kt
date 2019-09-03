@@ -49,6 +49,8 @@ object Utils {
       .setPriority(NotificationCompat.PRIORITY_HIGH)
       .setVibrate(LongArray(0))
 
+    Timber.d("Notification message: $message")
+
     // Show the notification
     NotificationManagerCompat.from(context)
       .notify(Constants.NOTIFICATION_ID, builder.build())
@@ -80,7 +82,6 @@ object Utils {
       theIntrinsic.setRadius(10f)
       theIntrinsic.setInput(inAlloc)
       theIntrinsic.forEach(outAlloc)
-      theIntrinsic.destroy()
       outAlloc.copyTo(output)
 
       return output
