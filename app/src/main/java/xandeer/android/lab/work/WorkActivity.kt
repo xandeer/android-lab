@@ -11,6 +11,7 @@ import android.view.View.VISIBLE
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.work.Data
+import androidx.work.WorkInfo
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_work.*
 import timber.log.Timber
@@ -56,14 +57,24 @@ class WorkActivity : AbstractActivity() {
       val workInfo = it[0]
       Timber.d("Observed work info: $workInfo")
       if (workInfo.state.isFinished) {
+        updateBlurredUri(vm, workInfo.outputData)
         showWorkFinished()
-        updateBlurredUri(workInfo.outputData)
         Utils.makeStatusNotification("Finished", applicationContext)
       } else {
         showWorkInProgress()
       }
-      goBtn.visibility = if (vm.pictureUri.value == null) GONE else VISIBLE
+
+      updateGoButton(workInfo.state, vm.pictureUri.value)
     })
+  }
+
+  private fun updateBlurredUri(vm: ViewModel, data: Data) {
+    val uriStr = data.getString(Constants.PICTURE_URI_KEY)
+    if (!TextUtils.isEmpty(uriStr)) {
+      val uri = Uri.parse(uriStr)
+      vm.blurredUri = uri
+      viewBlurredBtn.visibility = VISIBLE
+    }
   }
 
   private fun showWorkInProgress() {
@@ -77,12 +88,12 @@ class WorkActivity : AbstractActivity() {
     cancelBtn.visibility = GONE
   }
 
-  private fun updateBlurredUri(data: Data) {
-    val uriStr = data.getString(Constants.PICTURE_URI_KEY)
-    if (!TextUtils.isEmpty(uriStr)) {
-      val uri = Uri.parse(uriStr)
-      vm.blurredUri = uri
-      viewBlurredBtn.visibility = VISIBLE
+  private fun updateGoButton(state: WorkInfo.State, uri: Uri?) {
+    goBtn.visibility = when (state) {
+      WorkInfo.State.BLOCKED,
+      WorkInfo.State.ENQUEUED,
+      WorkInfo.State.RUNNING -> GONE
+      else -> if (uri == null) GONE else VISIBLE
     }
   }
 
