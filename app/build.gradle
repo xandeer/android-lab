@@ -47,6 +47,9 @@ dependencies {
   implementation deps.room.runtime
   annotationProcessor deps.room.compiler
 
+  implementation deps.dropbox
+  api deps.okhttp
+
   // Android Testing Support Library's runner and rules
   androidTestImplementation deps.atsl.core
   androidTestImplementation deps.atsl.runner

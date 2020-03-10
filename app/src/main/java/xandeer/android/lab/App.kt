@@ -9,10 +9,12 @@ import xandeer.android.lab.utils.log.TimberTreeFactory
 class App : Application() {
   companion object {
     private const val DEFAULT_SHARED_PREFERENCES_NAME = "default"
+    lateinit var context: App
   }
 
   override fun onCreate() {
     super.onCreate()
+    context = this
 
     Timber.plant(TimberTreeFactory.getTree())
   }

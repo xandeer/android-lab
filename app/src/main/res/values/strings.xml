@@ -12,4 +12,7 @@
   <string name="go">Go</string>
   <string name="view_blurred">View blurred</string>
   <string name="cancel">Cancel</string>
+  <string name="login">Login</string>
+  <string name="dropbox_key">n9ck51v5umi27od</string>
+  <string name="logout">Logout</string>
 </resources>

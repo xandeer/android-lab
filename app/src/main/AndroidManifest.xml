@@ -5,6 +5,7 @@
 
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.INTERNET" />
 
   <application
     android:name=".App"
@@ -24,6 +25,24 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
+    <activity android:name=".dpx.DropboxActivity" />
+    <activity
+      android:name="com.dropbox.core.android.AuthActivity"
+      android:configChanges="orientation|keyboard"
+      android:launchMode="singleTask">
+      <intent-filter>
+
+        <!-- Change this to be db- followed by your app key -->
+        <data android:scheme="db-n9ck51v5umi27od" />
+
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.BROWSABLE" />
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+
   </application>
 
 </manifest>
