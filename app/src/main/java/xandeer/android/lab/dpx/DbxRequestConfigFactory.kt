@@ -9,7 +9,7 @@ object DbxRequestConfigFactory {
   fun get(): DbxRequestConfig {
     if (!::config.isInitialized) {
       config = DbxRequestConfig.newBuilder("xandeer-lab")
-        .withHttpRequestor(OkHttp3Requestor(OkHttp3Requestor.defaultOkHttpClient()))
+//        .withHttpRequestor(OkHttp3Requestor(OkHttp3Requestor.defaultOkHttpClient()))
         .build()
     }
 
