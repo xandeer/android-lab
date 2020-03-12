@@ -3,4 +3,7 @@
   <color name="colorPrimary">#008577</color>
   <color name="colorPrimaryDark">#00574B</color>
   <color name="colorAccent">#D81B60</color>
+
+  <color name="folder_bg">#009CEB</color>
+  <color name="file_bg">#fff</color>
 </resources>

@@ -4,19 +4,21 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.FileObserver
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.Toast
-import com.dropbox.core.DbxException
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.WorkInfo
 import com.dropbox.core.android.Auth
 import com.dropbox.core.v2.users.FullAccount
 import kotlinx.android.synthetic.main.dropbox_activity.*
 import timber.log.Timber
 import xandeer.android.lab.AbstractActivity
 import xandeer.android.lab.R
-import xandeer.android.lab.utils.fileName
+import xandeer.android.lab.dpx.Local.CURSOR
 import xandeer.android.lab.utils.getVm
 import xandeer.android.lab.utils.observe
+import java.io.File
 
 class DropboxActivity : AbstractActivity() {
   companion object {
@@ -29,16 +31,25 @@ class DropboxActivity : AbstractActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.dropbox_activity)
 
+    Local.init()
     vm = getVm(DropboxVM::class.java)
 
+    initViews()
     subscribeVm()
     setCallbacks()
+  }
+
+  private fun initViews() {
+    files_view.layoutManager = LinearLayoutManager(this)
   }
 
   private fun subscribeVm() {
     observe(vm.token, ::updateBy)
     observe(vm.account, ::updateBy)
     observe(vm.uriToUpload, ::updateBy)
+    observe(vm.files, ::updateBy)
+    observe(vm.workInfos, ::updateBy)
+    observe(vm.folderPath, ::updateByPath)
   }
 
   private fun updateBy(token: String) {
@@ -50,6 +61,7 @@ class DropboxActivity : AbstractActivity() {
       login.visibility = GONE
       DbxClientFactory.init(token)
       vm.getAccount()
+      vm.goto("")
     }
   }
 
@@ -59,22 +71,63 @@ class DropboxActivity : AbstractActivity() {
   }
 
   private fun updateBy(uri: Uri) {
-    UploadTask(uri, object : UploadTask.Callback {
-      override fun onComplete() {
-        val msg = "Upload ${uri.fileName} successfully."
-        Timber.d(msg)
-        Toast.makeText(
-          this@DropboxActivity,
-          msg,
-          Toast.LENGTH_SHORT
-        )
-          .show()
-      }
+    Local.addFile(vm.folderPath.value!!, uri)
+  }
 
-      override fun onError(e: DbxException?) {
-        Timber.e(e, "Failed to upload file ${uri.fileName}.")
+  private fun updateBy(files: Array<File>) {
+    files_view.adapter = FileAdapter(files)
+  }
+
+  private fun updateBy(workInfos: List<WorkInfo>) {
+    Timber.d(workInfos.toString())
+    files_view.adapter?.notifyDataSetChanged()
+  }
+
+  private var fileObserver: FileObserver? = null
+  private fun updateByPath(path: String) {
+    path_view.text = if (path == "") "/" else path
+    observeFile(path)
+    observeUpload(path)
+    vm.pullFolder(path)
+  }
+
+  private fun observeFile(p: String) {
+    fileObserver?.stopWatching()
+    fileObserver = object : FileObserver(
+      Local.getFile(p),
+      CLOSE_WRITE.or(MOVED_TO).or(MOVED_FROM).or(DELETE).or(CREATE)
+    ) {
+      override fun onEvent(event: Int, path: String?) {
+        if (path != CURSOR) {
+          runOnUiThread {
+            if (p == vm.folderPath.value) {
+              vm.listFolder(p)
+            }
+          }
+        }
       }
-    }).execute()
+    }
+    fileObserver?.startWatching()
+    vm.listFolder(p)
+  }
+
+  var uploadObserver: FileObserver? = null
+  private fun observeUpload(p: String) {
+    uploadObserver?.stopWatching()
+    uploadObserver = object : FileObserver(
+      Local.getUploadFolder(p),
+      CREATE or CLOSE_WRITE
+    ) {
+      override fun onEvent(event: Int, path: String?) {
+        runOnUiThread {
+          if (p == vm.folderPath.value) {
+            vm.upload(Local.getUploadFiles(p))
+          }
+        }
+      }
+    }
+    uploadObserver?.startWatching()
+    vm.upload(Local.getUploadFiles(p))
   }
 
   private var isUpdatingToken = false
@@ -118,6 +171,14 @@ class DropboxActivity : AbstractActivity() {
     Timber.d("token: $token")
   }
 
+  override fun onBackPressed() {
+    if (vm.folderPath.value == "") {
+      super.onBackPressed()
+    } else {
+      vm.goto(vm.folderPath.value!!.substringBeforeLast("/"))
+    }
+  }
+
   override fun onActivityResult(
     requestCode: Int,
     resultCode: Int,
@@ -133,5 +194,11 @@ class DropboxActivity : AbstractActivity() {
     ) {
       vm.uriToUpload.value = uri
     }
+  }
+
+  override fun onDestroy() {
+    fileObserver?.stopWatching()
+    uploadObserver?.stopWatching()
+    super.onDestroy()
   }
 }

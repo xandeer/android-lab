@@ -1,8 +1,9 @@
-package xandeer.android.lab.dpx
+package xandeer.android.lab.dpx.task
 
 import android.os.AsyncTask
 import com.dropbox.core.DbxException
 import com.dropbox.core.v2.users.FullAccount
+import xandeer.android.lab.dpx.DbxClientFactory
 
 class GetCurrentAccountTask(private val cb: Callback) :
   AsyncTask<Void, Void, FullAccount>() {

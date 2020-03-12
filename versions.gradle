@@ -35,6 +35,8 @@ versions.timber = "4.5.1"
 versions.work = "2.2.0"
 versions.dropbox = '3.1.3'
 versions.okhttp = '3.10.0'
+versions.gson = '2.7'
+versions.jackson = '2.9.8'
 ext.versions = versions
 
 def deps = [:]
@@ -152,6 +154,8 @@ deps.navigation = navigation
 
 deps.dropbox = "com.dropbox.core:dropbox-core-sdk:$versions.dropbox"
 deps.okhttp = "com.squareup.okhttp3:okhttp:$versions.okhttp"
+deps.gson = "com.google.code.gson:gson:$versions.gson"
+deps.jackson = "com.fasterxml.jackson.core:jackson-databind:$versions.jackson"
 
 ext.deps = deps
 

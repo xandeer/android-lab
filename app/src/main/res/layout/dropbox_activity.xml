@@ -51,4 +51,17 @@
     android:layout_gravity="center"
     android:text="@string/login" />
 
+  <TextView
+    android:id="@+id/path_view"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="4dp"
+    android:textStyle="bold" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/files_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
 </LinearLayout>

@@ -1,6 +1,5 @@
 package xandeer.android.lab.utils
 
-import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -26,6 +25,9 @@ fun <T> MutableLiveData<T>.notify() {
 
 fun <T : ViewModel> Context.getVm(clazz: Class<T>) =
   ViewModelProviders.of(this as AppCompatActivity).get(clazz)
+
+fun <T : ViewModel> View.getVm(clazz: Class<T>) =
+  context.getVm(clazz)
 // ViewModel }
 
 // Uri {
@@ -53,3 +55,15 @@ val Uri.fileName: String
     return result ?: "untitled"
   }
 // Uri }
+
+// Dimensions {
+fun Context.dp(value: Int): Int =
+  (value * resources.displayMetrics.density).toInt()
+
+fun View.dp(value: Int): Int = context.dp(value)
+
+fun Context.px2dp(px: Int): Float =
+  px.toFloat() / resources.displayMetrics.density
+
+fun View.px2dp(px: Int): Float = context.px2dp(px)
+// Dimensions }

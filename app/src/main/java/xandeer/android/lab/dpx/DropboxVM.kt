@@ -4,15 +4,23 @@ import android.content.Context.MODE_PRIVATE
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkManager
 import com.dropbox.core.DbxException
 import com.dropbox.core.v2.users.FullAccount
 import timber.log.Timber
 import xandeer.android.lab.App.Companion.context
+import xandeer.android.lab.dpx.task.DownloadTask
+import xandeer.android.lab.dpx.task.GetCurrentAccountTask
+import xandeer.android.lab.dpx.task.ListFolderTask
+import xandeer.android.lab.dpx.worker.DownloadWorker
+import xandeer.android.lab.dpx.worker.UploadWorker
 import java.io.File
 
 class DropboxVM : ViewModel() {
   companion object {
     private const val TOKEN = "TOKEN"
+    const val UPDATE_TAG = "UPDATE_TAG"
   }
 
   private val sp =
@@ -45,4 +53,62 @@ class DropboxVM : ViewModel() {
   }
 
   val uriToUpload = MutableLiveData<Uri>()
+
+  val files = MutableLiveData<Array<File>>()
+
+  fun listFolder(path: String) {
+    files.value = Local.listFolder(path)
+  }
+
+  fun pullFolder(path: String) {
+    ListFolderTask(path, object : ListFolderTask.Callback {
+      override fun onComplete() {
+      }
+
+      override fun onError(e: Exception?) {
+        Timber.e(e, "Failed to list folder: $path")
+      }
+    }).execute()
+  }
+
+  val folderPath = MutableLiveData<String>()
+
+  fun goto(path: String) {
+    folderPath.value = path
+  }
+
+  fun download(path: String) {
+    DownloadTask(path, object : DownloadTask.Callback {
+      override fun onComplete() {
+      }
+
+      override fun onError(e: Exception?) {
+        Timber.e(e, "Failed to download $path")
+      }
+    }).execute()
+  }
+
+  private val wm = WorkManager.getInstance(context)
+
+  fun downloadByWorker(path: String) {
+    wm.beginUniqueWork(
+      path,
+      ExistingWorkPolicy.KEEP,
+      DownloadWorker.get(path)
+    ).enqueue()
+  }
+
+  fun upload(files: Array<File>?) {
+    files?.forEach {
+      val path = Local.getPath(it)
+      wm.beginUniqueWork(
+        path,
+        ExistingWorkPolicy.REPLACE,
+        UploadWorker.get(path)
+      ).enqueue()
+    }
+  }
+
+  val workInfos =
+    wm.getWorkInfosByTagLiveData(UPDATE_TAG)
 }
