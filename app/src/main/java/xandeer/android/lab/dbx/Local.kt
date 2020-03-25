@@ -1,4 +1,4 @@
-package xandeer.android.lab.dpx
+package xandeer.android.lab.dbx
 
 import android.net.Uri
 import xandeer.android.lab.App
@@ -55,10 +55,6 @@ object Local {
   fun createFolder(path: String) {
     val f = getFile(path)
     if (!f.exists()) f.mkdirs()
-  }
-
-  fun createPlaceholder(path: String) {
-    getFile(path).createNewFile()
   }
 
   fun addFile(parent: String, uri: Uri) {

@@ -4,7 +4,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  tools:context=".dpx.DropboxActivity">
+  tools:context=".dbx.DropboxActivity">
 
   <LinearLayout
     android:id="@+id/account_info"

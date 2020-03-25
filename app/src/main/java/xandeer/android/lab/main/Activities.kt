@@ -1,6 +1,6 @@
 package xandeer.android.lab.main
 
-import xandeer.android.lab.dpx.DropboxActivity
+import xandeer.android.lab.dbx.DropboxActivity
 import xandeer.android.lab.pdftopng.PdfToPngActivity
 import xandeer.android.lab.work.WorkActivity
 

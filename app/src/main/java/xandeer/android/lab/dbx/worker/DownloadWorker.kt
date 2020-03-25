@@ -1,4 +1,4 @@
-package xandeer.android.lab.dpx.worker
+package xandeer.android.lab.dbx.worker
 
 import android.content.Context
 import androidx.work.Data
@@ -7,9 +7,9 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.dropbox.core.v2.files.FileMetadata
 import timber.log.Timber
-import xandeer.android.lab.dpx.DbxClientFactory
-import xandeer.android.lab.dpx.DropboxVM.Companion.UPDATE_TAG
-import xandeer.android.lab.dpx.Local
+import xandeer.android.lab.dbx.DbxClientFactory
+import xandeer.android.lab.dbx.DropboxVM.Companion.UPDATE_TAG
+import xandeer.android.lab.dbx.Local
 
 class DownloadWorker(appContext: Context, workerParameters: WorkerParameters) :
   Worker(appContext, workerParameters) {

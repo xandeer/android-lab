@@ -1,4 +1,4 @@
-package xandeer.android.lab.dpx
+package xandeer.android.lab.dbx
 
 import android.app.Activity
 import android.content.Intent
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.dropbox_activity.*
 import timber.log.Timber
 import xandeer.android.lab.AbstractActivity
 import xandeer.android.lab.R
-import xandeer.android.lab.dpx.Local.CURSOR
+import xandeer.android.lab.dbx.Local.CURSOR
 import xandeer.android.lab.utils.getVm
 import xandeer.android.lab.utils.observe
 import java.io.File

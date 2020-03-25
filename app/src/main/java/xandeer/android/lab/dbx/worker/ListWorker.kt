@@ -1,40 +1,35 @@
-package xandeer.android.lab.dpx.task
+package xandeer.android.lab.dbx.worker
 
-import android.os.AsyncTask
-import androidx.work.ExistingWorkPolicy
-import androidx.work.WorkManager
+import android.content.Context
+import androidx.work.*
 import com.dropbox.core.v2.files.DeletedMetadata
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import timber.log.Timber
 import xandeer.android.lab.App.Companion.context
-import xandeer.android.lab.dpx.DbxClientFactory
-import xandeer.android.lab.dpx.Local
-import xandeer.android.lab.dpx.worker.DownloadWorker
+import xandeer.android.lab.dbx.DbxClientFactory
+import xandeer.android.lab.dbx.Local
 
-class ListFolderTask(
-  private val path: String,
-  private val cb: Callback
-) : AsyncTask<Void, Void, Void>() {
+class ListWorker(appContext: Context, workerParameters: WorkerParameters) :
+  Worker(appContext, workerParameters) {
 
-  interface Callback {
-    fun onComplete()
-    fun onError(e: Exception?)
-  }
+  companion object {
+    private const val PATH = "PATH"
 
-  private var exception: Exception? = null
-  override fun onPostExecute(o: Void?) {
-    super.onPostExecute(o)
-
-    if (exception == null) {
-      cb.onComplete()
-    } else {
-      cb.onError(exception)
+    fun get(path: String): OneTimeWorkRequest {
+      val data = Data.Builder()
+        .putString(PATH, path)
+        .build()
+      return OneTimeWorkRequest.Builder(ListWorker::class.java)
+        .setInputData(data)
+        .build()
     }
   }
 
-  override fun doInBackground(vararg p0: Void?): Void? {
-    try {
+  override fun doWork(): Result {
+    val path = inputData.getString(PATH) ?: ""
+
+    return try {
       val files = DbxClientFactory.get().files()
 
       val cursor = Local.getCursor(path)
@@ -46,12 +41,9 @@ class ListFolderTask(
       var r = res
 
       while (r.hasMore) {
-        Timber.d("Has more...")
         r = files.listFolderContinue(r.cursor)
         res.entries.addAll(r.entries)
       }
-
-      Timber.d(res.toString())
 
       res.entries.forEach {
         when (it) {
@@ -62,10 +54,12 @@ class ListFolderTask(
       }
 
       Local.saveCursor(path, r.cursor)
+
+      Result.success()
     } catch (e: Exception) {
-      exception = e
+      Timber.e("Failed to list folder: $path", e)
+      Result.failure()
     }
-    return null
   }
 
   private fun download(path: String) {

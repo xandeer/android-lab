@@ -1,4 +1,4 @@
-package xandeer.android.lab.dpx
+package xandeer.android.lab.dbx
 
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
@@ -8,7 +8,6 @@ object DbxClientFactory {
 
   fun init(token: String) {
     if (!::client.isInitialized) {
-//      client = DbxClientV2(DbxRequestConfigFactory.get(), token)
       client = DbxClientV2(DbxRequestConfig("xandeer-lab"), token)
     }
   }
