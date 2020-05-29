@@ -1,6 +1,7 @@
 package xandeer.android.lab.main
 
 import xandeer.android.lab.dbx.DropboxActivity
+import xandeer.android.lab.pdfpreview.PdfPreviewActivity
 import xandeer.android.lab.pdftopng.PdfToPngActivity
 import xandeer.android.lab.work.WorkActivity
 
@@ -9,7 +10,8 @@ object Activities {
     Model("Main", MainActivity::class.java.name),
     Model("Pdf To Png", PdfToPngActivity::class.java.name),
     Model("Work Manager", WorkActivity::class.java.name),
-    Model("Dropbox", DropboxActivity::class.java.name)
+    Model("Dropbox", DropboxActivity::class.java.name),
+    Model("Pdf Previewer", PdfPreviewActivity::class.java.name)
   )
 
   val size = models.size

@@ -4,7 +4,9 @@
   package="xandeer.android.lab">
 
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
   <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
   <uses-permission android:name="android.permission.INTERNET" />
 
   <application
@@ -16,6 +18,9 @@
     android:supportsRtl="true"
     android:theme="@style/AppTheme"
     tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+    <activity
+      android:name=".pdfpreview.PdfPreviewActivity"
+      android:theme="@style/Theme.Design.NoActionBar" />
     <activity android:name=".work.WorkActivity" />
     <activity android:name=".pdftopng.PdfToPngActivity" />
     <activity android:name=".main.MainActivity">
@@ -25,7 +30,6 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-
     <activity android:name=".dbx.DropboxActivity" />
     <activity
       android:name="com.dropbox.core.android.AuthActivity"
@@ -42,7 +46,6 @@
         <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
     </activity>
-
   </application>
 
 </manifest>
