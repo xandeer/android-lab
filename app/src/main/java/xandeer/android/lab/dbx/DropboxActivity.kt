@@ -94,7 +94,7 @@ class DropboxActivity : AbstractActivity() {
   private fun observeFile(p: String) {
     fileObserver?.stopWatching()
     fileObserver = object : FileObserver(
-      Local.getFile(p),
+      Local.getFile(p).absolutePath,
       CLOSE_WRITE.or(MOVED_TO).or(MOVED_FROM).or(DELETE).or(CREATE)
     ) {
       override fun onEvent(event: Int, path: String?) {
@@ -115,7 +115,7 @@ class DropboxActivity : AbstractActivity() {
   private fun observeUpload(p: String) {
     uploadObserver?.stopWatching()
     uploadObserver = object : FileObserver(
-      Local.getUploadFolder(p),
+      Local.getUploadFolder(p).absolutePath,
       CREATE or CLOSE_WRITE
     ) {
       override fun onEvent(event: Int, path: String?) {
@@ -172,7 +172,7 @@ class DropboxActivity : AbstractActivity() {
   }
 
   override fun onBackPressed() {
-    if (vm.folderPath.value == "") {
+    if (vm.folderPath.value.isNullOrEmpty()) {
       super.onBackPressed()
     } else {
       vm.goto(vm.folderPath.value!!.substringBeforeLast("/"))
