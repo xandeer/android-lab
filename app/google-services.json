@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "425709956739",
+    "firebase_url": "https://android-lab-a2f5e.firebaseio.com",
+    "project_id": "android-lab-a2f5e",
+    "storage_bucket": "android-lab-a2f5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425709956739:android:14be0c3613547baea875b6",
+        "android_client_info": {
+          "package_name": "xandeer.android.lab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425709956739-3ruei5fsfm7j1p03rso6582664tt4q3q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwYUEczh-CHYSATp2Tkg7rqiczZfsU9CE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425709956739-3ruei5fsfm7j1p03rso6582664tt4q3q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
