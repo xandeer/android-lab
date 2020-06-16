@@ -6,11 +6,13 @@ import android.view.View.VISIBLE
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.android.synthetic.main.activity_coroutines.*
 import xandeer.android.lab.AbstractActivity
 import xandeer.android.lab.R
 import xandeer.android.lab.coroutine.CoroutineViewModel.Companion.FACTORY
 import xandeer.android.lab.utils.observe
+import java.lang.RuntimeException
 
 class CoroutineActivity : AbstractActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +44,8 @@ class CoroutineActivity : AbstractActivity() {
       Snackbar.make(rootLayout, it, Snackbar.LENGTH_SHORT).show()
       viewModel.onSnackbarShown()
       logEvent("snack", it)
+      // Report a non-fatal exception
+      FirebaseCrashlytics.getInstance().recordException(RuntimeException("Test Crash"))
     }
   }
 
