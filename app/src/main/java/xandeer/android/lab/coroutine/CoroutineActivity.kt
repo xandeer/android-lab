@@ -5,6 +5,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_coroutines.*
 import xandeer.android.lab.AbstractActivity
 import xandeer.android.lab.R
@@ -25,8 +26,14 @@ class CoroutineActivity : AbstractActivity() {
 
     rootLayout.setOnClickListener { viewModel.onMainViewClicked() }
 
-    observe(viewModel.title) { title_view.text = it }
-    observe(viewModel.taps) { taps.text = it }
+    observe(viewModel.title) {
+      title_view.text = it
+      it?.let { logEvent("title", it) }
+    }
+    observe(viewModel.taps) {
+      taps.text = it
+      logEvent("taps", it)
+    }
     observe(viewModel.spinner) {
       spinner.visibility = if (it) VISIBLE else GONE
     }
@@ -34,7 +41,15 @@ class CoroutineActivity : AbstractActivity() {
     observe(viewModel.snackbar) {
       Snackbar.make(rootLayout, it, Snackbar.LENGTH_SHORT).show()
       viewModel.onSnackbarShown()
+      logEvent("snack", it)
     }
+  }
+
+  private fun logEvent(name: String, param: Any) {
+    val bundle = Bundle()
+    bundle.putString("param", param.toString())
+    FirebaseAnalytics.getInstance(this)
+      .logEvent(name, bundle)
   }
 }
 
