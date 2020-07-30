@@ -47,6 +47,7 @@
       </intent-filter>
     </activity>
     <activity android:name=".coroutine.CoroutineActivity" />
+    <activity android:name=".repository.ui.DevByteActivity" />
   </application>
 
 </manifest>
