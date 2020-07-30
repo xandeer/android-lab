@@ -4,6 +4,7 @@ import xandeer.android.lab.coroutine.CoroutineActivity
 import xandeer.android.lab.dbx.DropboxActivity
 import xandeer.android.lab.pdfpreview.PdfPreviewActivity
 import xandeer.android.lab.pdftopng.PdfToPngActivity
+import xandeer.android.lab.repository.ui.DevByteActivity
 import xandeer.android.lab.work.WorkActivity
 
 object Activities {
@@ -13,7 +14,8 @@ object Activities {
     Model("Work Manager", WorkActivity::class.java.name),
     Model("Dropbox", DropboxActivity::class.java.name),
     Model("Pdf Previewer", PdfPreviewActivity::class.java.name),
-    Model("Coroutine", CoroutineActivity::class.java.name)
+    Model("Coroutine", CoroutineActivity::class.java.name),
+    Model("Repository", DevByteActivity::class.java.name)
   )
 
   val size = models.size
