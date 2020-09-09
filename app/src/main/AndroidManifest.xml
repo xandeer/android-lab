@@ -19,6 +19,9 @@
     android:theme="@style/AppTheme"
     tools:ignore="AllowBackup,GoogleAppIndexingWarning">
     <activity
+      android:name=".showkeycode.ShowKeyCodeActivity"
+      android:theme="@style/AppTheme.NoActionBar" />
+    <activity
       android:name=".pdfpreview.PdfPreviewActivity"
       android:theme="@style/Theme.Design.NoActionBar" />
     <activity android:name=".work.WorkActivity" />
