@@ -20,6 +20,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.github.xandeer.android.fab.*
+import com.github.xandeer.android.lab.ui.bottomsheet.BottomSheetBody
 import com.github.xandeer.android.lab.ui.components.LabTabRow
 import com.github.xandeer.android.lab.ui.theme.AndroidLabTheme
 
@@ -33,10 +34,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun LabApp() {
   AndroidLabTheme {
-    val allScreens = LabScreen.values().toList()
+    val allScreens = Destination.values().toList()
     val navController = rememberNavController()
     val backstackEntry = navController.currentBackStackEntryAsState()
-    val currentScreen = LabScreen.fromRoute(
+    val currentScreen = Destination.fromRoute(
       backstackEntry.value?.destination?.route
     )
     Scaffold(bottomBar = {
@@ -58,13 +59,16 @@ fun LabNavHost(
 ) {
   NavHost(
     navController = navController,
-    startDestination = LabScreen.BOOKS.name,
+    startDestination = Destination.BOTTOM_SHEET.name,
     modifier = modifier
   ) {
-    composable(LabScreen.HOME.name) {
+    composable(Destination.HOME.name) {
       Body(nav = it)
     }
-    composable(LabScreen.BOOKS.name) { nav ->
+    composable(Destination.BOTTOM_SHEET.name) {
+      BottomSheetBody()
+    }
+    composable(Destination.BOOKS.name) { nav ->
       var fabState by remember {
         mutableStateOf(FabMenuState.COLLAPSED)
       }
@@ -73,17 +77,17 @@ fun LabNavHost(
         FabMenu(
           icon = Icons.Filled.Add,
           items = listOf(
-            FabMenuItem(LabScreen.BOOKS, Icons.Filled.Book, "Book"),
-            FabMenuItem(LabScreen.Me, Icons.Filled.Man, "Man")
+            FabMenuItem(Destination.BOOKS, Icons.Filled.Book, "Book"),
+            FabMenuItem(Destination.Me, Icons.Filled.Man, "Man")
           ),
           state = fabState,
           expandLabel = "Add",
           stateChanged = { fabState = it },
           onFabClicked = {
-            toast(context, LabScreen.HOME.name)
+            toast(context, Destination.HOME.name)
           },
           onMenuItemClicked = {
-            toast(context, (it.identifier as LabScreen).name)
+            toast(context, (it.identifier as Destination).name)
           }
         )
       }) {
@@ -93,7 +97,7 @@ fun LabNavHost(
         }
       }
     }
-    composable(LabScreen.Me.name) {
+    composable(Destination.Me.name) {
       Body(nav = it)
     }
   }

@@ -2,6 +2,7 @@ package com.github.xandeer.android.lab.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
@@ -10,23 +11,22 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
-import com.github.xandeer.android.lab.LabScreen
+import com.github.xandeer.android.lab.Destination
 
 @Composable
 fun LabTabRow(
-  allScreens: List<LabScreen>,
-  onTabSelected: (LabScreen) -> Unit,
-  currentScreen: LabScreen
+  allScreens: List<Destination>,
+  onTabSelected: (Destination) -> Unit,
+  currentScreen: Destination
 ) {
   Surface(
     Modifier
       .height(TabHeight)
       .fillMaxWidth()
-      .alpha(.8f)
+      .background(MaterialTheme.colorScheme.surface)
   ) {
     Column {
       Divider(
@@ -81,7 +81,8 @@ private fun RowScope.LabTab(
       imageVector = icon, contentDescription = text, tint = tabTintColor,
     )
     Text(
-      text = text, style = MaterialTheme.typography.labelSmall,
+      text = text, style = MaterialTheme.typography.labelSmall, color = tabTintColor,
+      maxLines = 1
     )
   }
 }
