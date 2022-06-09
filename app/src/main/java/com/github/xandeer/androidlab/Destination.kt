@@ -1,7 +1,9 @@
 package com.github.xandeer.androidlab
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Man
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class Destination(val icon: ImageVector) {
