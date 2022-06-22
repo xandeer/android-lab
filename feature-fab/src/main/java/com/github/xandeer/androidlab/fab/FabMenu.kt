@@ -86,23 +86,31 @@ fun FabMenu(
         }
       }
     }
+
+    fun fabClicked() {
+      if (state.isExpanded) {
+        onFabClicked()
+      }
+      dispatchStateChange()
+    }
+
     Row(verticalAlignment = Alignment.CenterVertically) {
-      if (transition.targetState.isExpanded || state.isExpanded) {
-        expandLabel?.let {
-          FabLabel(text = it, alpha = alpha)
-          Spacer(modifier = Modifier.width(16.dp))
+      expandLabel?.let {
+        if (transition.currentState.isExpanded || state.isExpanded) {
+          Row(modifier = Modifier.clickable(
+            indication = null,
+            interactionSource = remember { MutableInteractionSource() }) { fabClicked() }) {
+            FabLabel(text = it, alpha = alpha)
+            Spacer(modifier = Modifier.width(16.dp))
+          }
         }
       }
       FloatingActionButton(
         shape = MaterialTheme.shapes.extraLarge,
         containerColor = if (state.isExpanded) Color.White
         else MaterialTheme.colorScheme.primary,
-        onClick = {
-          if (state == FabMenuState.EXPANDED) {
-            onFabClicked()
-          }
-          dispatchStateChange()
-        }) {
+        onClick = { fabClicked() }
+      ) {
         Icon(
           imageVector = icon,
           contentDescription = "",
@@ -154,6 +162,7 @@ fun FabModal(
 }
 
 private val FAB_ITEM_SIZE = 36.dp
+
 @Composable
 private fun FabMenuItem(
   item: FabMenuItem,
